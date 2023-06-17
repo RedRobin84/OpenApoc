@@ -108,6 +108,14 @@ class Organisation : public StateObject<Organisation>
 		RaidMission(uint64_t when, OrganisationRaid::Type type, StateRef<Building> building);
 		void execute(GameState &state, StateRef<City> city, StateRef<Organisation> owner);
 	};
+	class DiplomaticEffect
+	{
+	  protected:
+		[[nodiscard]] virtual bool conditionMet(GameState &state, StateRef<Organisation> thisOrg,
+		                                        StateRef<Organisation> affectedOrg) const = 0;
+		virtual void applyEffect(GameState &state, StateRef<Organisation> thisOrg,
+		                         StateRef<Organisation> affectedOrg) const = 0;
+	};
 
 	UString id;
 	UString name;
@@ -132,6 +140,7 @@ class Organisation : public StateObject<Organisation>
 	std::list<StateRef<AgentType>> guard_types_reinforcements;
 	std::list<StateRef<AgentType>> guard_types_human;
 	std::list<StateRef<AgentType>> guard_types_alien;
+	std::list<sp<DiplomaticEffect>> diplomaticEffects;
 
 	std::map<LootPriority, std::vector<StateRef<AEquipmentType>>> loot;
 
