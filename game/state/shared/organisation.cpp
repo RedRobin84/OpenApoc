@@ -976,6 +976,17 @@ void Organisation::signTreatyWith(GameState &state, StateRef<Organisation> other
 	other->balance -= bribe;
 }
 
+void Organisation::applyDiplomaticEffects(GameState &state, StateRef<Organisation> affectedOrg)
+{
+	for (const auto &effect : diplomaticEffects)
+	{
+		if (effect.conditionMet(state, affectedOrg))
+		{
+			effect.applyEffect(state, affectedOrg);
+		}
+	}
+}
+
 template <>
 sp<Organisation> StateObject<Organisation>::get(const GameState &state, const UString &id)
 {

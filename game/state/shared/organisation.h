@@ -110,11 +110,13 @@ class Organisation : public StateObject<Organisation>
 	};
 	class DiplomaticEffect
 	{
-	  protected:
-		[[nodiscard]] virtual bool conditionMet(GameState &state, StateRef<Organisation> thisOrg,
+	  private:
+		StateRef<Organisation> affectingOrg;
+
+	  public:
+		[[nodiscard]] virtual bool conditionMet(GameState &state,
 		                                        StateRef<Organisation> affectedOrg) const = 0;
-		virtual void applyEffect(GameState &state, StateRef<Organisation> thisOrg,
-		                         StateRef<Organisation> affectedOrg) const = 0;
+		virtual void applyEffect(GameState &state, StateRef<Organisation> affectedOrg) const = 0;
 	};
 
 	UString id;
@@ -140,7 +142,6 @@ class Organisation : public StateObject<Organisation>
 	std::list<StateRef<AgentType>> guard_types_reinforcements;
 	std::list<StateRef<AgentType>> guard_types_human;
 	std::list<StateRef<AgentType>> guard_types_alien;
-	std::list<sp<DiplomaticEffect>> diplomaticEffects;
 
 	std::map<LootPriority, std::vector<StateRef<AEquipmentType>>> loot;
 
@@ -192,8 +193,10 @@ class Organisation : public StateObject<Organisation>
 	                    bool forceAlliance = false);
 	float getRelationTo(const StateRef<Organisation> &other) const;
 	void adjustRelationTo(GameState &state, StateRef<Organisation> other, float value);
+	void applyDiplomaticEffects(GameState &state, StateRef<Organisation> affectedOrg);
 	std::map<StateRef<Organisation>, float> current_relations;
 	std::map<StateRef<Organisation>, float> long_term_relations;
+	std::list<DiplomaticEffect> diplomaticEffects;
 
 	// Following members are not serialized, but rather are set in initCity method
 
