@@ -114,6 +114,8 @@ class Organisation : public StateObject<Organisation>
 		StateRef<Organisation> affectingOrg;
 
 	  public:
+		DiplomaticEffect(StateRef<Organisation> affectingOrg) : affectingOrg(affectingOrg) {}
+		virtual ~DiplomaticEffect() = default;
 		[[nodiscard]] virtual bool conditionMet(GameState &state,
 		                                        StateRef<Organisation> affectedOrg) const = 0;
 		virtual void applyEffect(GameState &state, StateRef<Organisation> affectedOrg) const = 0;
@@ -196,7 +198,7 @@ class Organisation : public StateObject<Organisation>
 	void applyDiplomaticEffects(GameState &state, StateRef<Organisation> affectedOrg);
 	std::map<StateRef<Organisation>, float> current_relations;
 	std::map<StateRef<Organisation>, float> long_term_relations;
-	std::list<DiplomaticEffect> diplomaticEffects;
+	std::list<sp<DiplomaticEffect>> diplomaticEffects;
 
 	// Following members are not serialized, but rather are set in initCity method
 
