@@ -980,9 +980,9 @@ void Organisation::applyDiplomaticEffects(GameState &state, StateRef<Organisatio
 {
 	for (const auto &effect : diplomaticEffects)
 	{
-		if (effect.conditionMet(state, affectedOrg))
+		if (effect->conditionMet(state, affectedOrg))
 		{
-			effect.applyEffect(state, affectedOrg);
+			effect->applyEffect(state, affectedOrg);
 		}
 	}
 }
